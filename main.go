@@ -25,10 +25,17 @@ func faq(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(w, "<p>Someone who brings your drinks</p>")
 }
 
+func notFound(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "text/html")
+	fmt.Fprint(w, "Not all that wander are lost, but the page you are looking for is. Check the url and try again.")
+}
+
 func main() {
+	var h http.Handler = http.HandlerFunc(notFound)
 	r := mux.NewRouter()
 	r.HandleFunc("/", home)
 	r.HandleFunc("/contact", contact)
 	r.HandleFunc("/faq", faq)
+	r.NotFoundHandler = h
 	http.ListenAndServe(":3000", r)
 }
