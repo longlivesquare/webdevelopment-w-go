@@ -5,7 +5,16 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"github.com/julienschmidt/httprouter"
 )
+
+func Index(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	fmt.Fprint(w, "Welcome!\n")
+}
+
+func Hello(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	fmt.Fprintf(w, "hello, %s!\n", ps.ByName("name"))
+}
 
 func home(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html")
@@ -38,4 +47,10 @@ func main() {
 	r.HandleFunc("/faq", faq)
 	r.NotFoundHandler = h
 	http.ListenAndServe(":3000", r)
+
+	// router := httprouter.New()
+	// router.GET("/", Index)
+	// router.GET("/hello/:name", Hello)
+
+	// log.Fatal(http.ListenAndServe(":8080", router))
 }
